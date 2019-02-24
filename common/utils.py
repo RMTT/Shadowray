@@ -1,5 +1,6 @@
 import requests
 import time
+import json
 
 
 def parse_yes_or_no(text):
@@ -13,12 +14,12 @@ def parse_yes_or_no(text):
         return None
 
 
-def print_progress(percent, width=100,extra = ''):
+def print_progress(percent, width=100, extra=''):
     if percent > 100:
         percent = 100
 
     format_str = ('[%%-%ds]' % width) % ('#' * int(percent * width / 100.))
-    print('\r%s  %.2f%%  %s' % (format_str, percent,extra), end='')
+    print('\r%s  %.2f%%  %s' % (format_str, percent, extra), end='')
 
 
 def download_file(url, filename, show_progress=False):
@@ -47,6 +48,8 @@ def download_file(url, filename, show_progress=False):
                     count_s = count
                     time_s = time_e
 
-                print_progress(percent,extra='%.2fM/S' % speed)
+                print_progress(percent, extra='%.2fM/S' % speed)
 
     f.close()
+
+

@@ -25,9 +25,9 @@ if s:
     print("Latest publish date of v2ray-core: " + r['published_at'])
     print("Latest version of v2ray-core: " + r['tag_name'])
 
-    os = str(platform.system())
+    os_str = str(platform.system())
     arch = str(platform.architecture()[0])
-    print("Platform: " + os + " " + arch)
+    print("Platform: " + os_str + " " + arch)
 
     assets = r['assets']
 
@@ -35,7 +35,7 @@ if s:
     for asset in assets:
         name = str(asset['name'])
 
-        if name.endswith("zip") and name.find(os.lower()) != -1 and name.find(arch[0:2]) != -1:
+        if name.endswith("zip") and name.find(os_str.lower()) != -1 and name.find(arch[0:2]) != -1:
             download_url = str(asset['browser_download_url'])
             break
 
@@ -45,7 +45,11 @@ if s:
         print('Download from %s' % download_url)
 
         download_file_name = "v2ray/" + download_url.split('/')[-1]
-        download_file(download_url, download_file_name, show_progress=True)
+
+        if not os.path.exists(download_file_name):
+            download_file(download_url, download_file_name, show_progress=True)
+        else:
+            print("File already exist.")
 
         print("\nUncompression:")
         f = zipfile.ZipFile(download_file_name, 'r')
@@ -56,5 +60,6 @@ if s:
             count += 1
             print_progress(100 * count / total, extra="%d/%d" % (count, total))
 
+        print("\nSuccess!")
 else:
     print("Please download the v2ray-core by yourself and put it into the 'v2ray' folder.")

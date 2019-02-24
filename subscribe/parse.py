@@ -2,16 +2,19 @@ import requests
 import json
 from common.B64 import decode
 from config.v2ray import *
+from config.v2ray import SUBSCRIBE_FILE
+from core.configuration import Configuration
 
 
 class Parse:
     def __init__(self, filename=None):
         self.servers = []
+        self.filename = None
 
-        self.subscribes = None
+        self.subscribes = json.loads("{}")
         if filename is not None:
             f = open(filename, "r")
-            self.subscribes = json.loads(f.read())
+            self.subscribes = json.load(f)
             f.close()
 
             self.filename = filename
@@ -28,28 +31,28 @@ class Parse:
             t = t.split("://")
             t[1] = json.loads(decode(t[1]))
 
+            config = Configuration()
+
+            inbound = Configuration.Inbound(1082, "127.0.0.1", "socks")
+            socks = Configuration.ProtocolSetting.Inbound.Socks()
+            inbound.set_settings(socks)
+            config.add_inbound(inbound)
+
             if t[0] == "vmess":
-                config = DEFAULT_CONFIG_VMESS
-                config['outbounds'].append({
-                    "protocol": "vmess",
-                    "settings": {
-                        "vnext": [
-                            {
-                                "address": t[1]['add'],
-                                "port": t[1]['port'],
-                                "users": [
-                                    {
-                                        "id": t[1]['id'],
-                                        "alterId": t[1]['aid']
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                })
+                print(t[1])
+                outbound = Configuration.Outbound("vmess")
+                vmess = Configuration.ProtocolSetting.Outbound.VMess()
+                vmess_server = Configuration.ProtocolSetting.Outbound.VMess.Server(addr=t[1]['add'],
+                                                                                   port=int(t[1]['port']))
+                vmess_server.add_user(id=t[1]['id'], aid=t[1]['aid'], security=t[1]['type'],
+                                      level=t[1]['v'])
+                vmess.add_server(vmess_server)
+                outbound.set_settings(vmess)
+                config.add_ontbound(outbound)
+
                 self.servers.append({
                     "protocol": t[0],
-                    "config": config,
+                    "config": config.json_obj,
                     "ps": t[1]['ps']
                 })
 
@@ -61,17 +64,18 @@ class Parse:
         else:
             self.get_url(self.subscribes[name])
 
-    def save(self, filename):
+    def save(self, filename=None):
+        if filename is None:
+            filename = SUBSCRIBE_FILE
         f = open(filename, 'w')
-        f.write(str(self.subscribes))
+        f.write(json.dumps(self.subscribes))
         f.close()
 
     def add(self, name, url):
         self.subscribes[name] = url
-        self.save(self.filename)
 
+    def delete(self, name):
+        del self.subscribes[name]
 
-if __name__ == '__main__':
-    p = Parse("https://mosucloud.info/modules/servers/V2raySocks/osubscribe.php?sid=22&token=kbaiisxd")
-    p.update()
-    print(p.servers)
+    def get_servers(self):
+        return self.servers
