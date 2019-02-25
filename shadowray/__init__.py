@@ -58,7 +58,7 @@ def have_config():
 
 
 def add_subscribe(args):
-    v = args.split(',')
+    v = args.split(':')
 
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
 
@@ -209,7 +209,7 @@ def show_servers():
 def proxy(index):
     index = int(index)
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
-    manager = Manager(server_file_name=j['servers_file'])
+    manager = Manager(server_file_name=j['servers_file'], binary=j['v2ray_binary'])
 
     manager.proxy(index - 1)
 

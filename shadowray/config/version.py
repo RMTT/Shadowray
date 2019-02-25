@@ -9,7 +9,7 @@ COMMAND_SHORT = "vhs"
 HELP_INFO = \
     '''--help[-h]                   print help message
     --version[-v]                   show current version of shadowray
-    --subscribe-add name,url        add subscribe
+    --subscribe-add name:'url'      add subscribe
     --subscribe-update              update subscribe
     --config-v2ray path             setup the path of v2ray binary
     --config-subscribe path         setup the path of subscribe file
