@@ -21,14 +21,14 @@ class Parse:
     def get_url(self, url):
         r = requests.get(url).text
         text = decode(r)
-        print(text)
+
         text = text.split('\n')
 
         for t in text:
             if len(t) is 0:
                 continue
             t = t.split("://")
-            print(t)
+
             t[1] = json.loads(decode(t[1]))
 
             config = Configuration()
