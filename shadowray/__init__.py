@@ -58,7 +58,7 @@ def have_config():
 
 
 def add_subscribe(args):
-    v = args.split(':')
+    v = args.split(',')
 
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
 

@@ -39,7 +39,6 @@ class Parse:
             config.add_inbound(inbound)
 
             if t[0] == "vmess":
-                print(t[1])
                 outbound = Configuration.Outbound("vmess")
                 vmess = Configuration.ProtocolSetting.Outbound.VMess()
                 vmess_server = Configuration.ProtocolSetting.Outbound.VMess.Server(addr=t[1]['add'],
