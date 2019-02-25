@@ -1,8 +1,8 @@
 import requests
 import json
-from shadowray_pkg.common.B64 import decode
-from shadowray_pkg.config.v2ray import SUBSCRIBE_FILE
-from shadowray_pkg.core.configuration import Configuration
+from shadowray.common.B64 import decode
+from shadowray.config.v2ray import SUBSCRIBE_FILE
+from shadowray.core.configuration import Configuration
 
 
 class Parse:

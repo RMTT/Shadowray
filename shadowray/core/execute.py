@@ -1,5 +1,5 @@
 import subprocess
-from shadowray_pkg.config.v2ray import EXECUTE_ARGS
+from shadowray.config.v2ray import EXECUTE_ARGS
 
 
 class Execute:

@@ -1,6 +1,6 @@
 import json
-from shadowray_pkg.config.v2ray import SERVER_FILE
-from shadowray_pkg.config.v2ray import SERVER_KEY_FROM_SUBSCRIBE, SERVER_KEY_FROM_ORIGINAL
+from shadowray.config.v2ray import SERVER_FILE
+from shadowray.config.v2ray import SERVER_KEY_FROM_SUBSCRIBE, SERVER_KEY_FROM_ORIGINAL
 
 
 class Server:

@@ -1,8 +1,8 @@
-from shadowray_pkg.config.v2_repo import RELEASE_API
-from shadowray_pkg.config.version import *
-from shadowray_pkg.common.utils import parse_yes_or_no
-from shadowray_pkg.common.utils import download_file
-from shadowray_pkg.common.utils import print_progress
+from shadowray.config.v2_repo import RELEASE_API
+from shadowray.config.version import *
+from shadowray.common.utils import parse_yes_or_no
+from shadowray.common.utils import download_file
+from shadowray.common.utils import print_progress
 import requests
 import json
 import platform
