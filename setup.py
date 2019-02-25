@@ -1,12 +1,12 @@
 import setuptools
-from shadowray.config.v2ray import PROJECT_CONFIG_FILE
+from shadowray.config.version import VERSION_ID
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="shadowray",
-    version="0.1.0",
+    version=VERSION_ID,
     author="RMT",
     author_email="d.rong@outlook.com",
     description="A useful client of v2ray for linux",

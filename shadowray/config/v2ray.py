@@ -4,6 +4,7 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 V2RAY_FOLDER = os.path.join(PROJECT_PATH, "v2ray")
 V2RAY_BINARY = os.path.join(V2RAY_FOLDER, "v2ray")
+V2CTL_BINARY = os.path.join(V2RAY_FOLDER, "v2ctl")
 EXECUTE_ARGS = "-config=stdin:"
 
 RESOURCES_FOLDER = os.path.join(PROJECT_PATH, "resources")

@@ -9,3 +9,7 @@ shadowray --subscribe-add 'name,url'
 shadowray --list
 shadowray -s 1
 ```
+for more detail about command:
+```bash
+shadowray --help
+```

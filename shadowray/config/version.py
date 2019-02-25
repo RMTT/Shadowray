@@ -1,10 +1,10 @@
-VERSION_ID = "0.1.0"
+VERSION_ID = "0.1.3"
 AUTHOR = "RMT"
 EMAIL = "d.rong@outlook.com"
 
 COMMAND_LONG = ["version", "help", "subscribe-add=", "subscribe-update", "config-v2ray=", "config-subscribe=",
                 "config-servers=", "autoconfig", "subscribe-update", "list", "start="]
-COMMAND_SHORT = "vhs"
+COMMAND_SHORT = "vhs:"
 
 HELP_INFO = \
 ''' --help[-h]                      print help message

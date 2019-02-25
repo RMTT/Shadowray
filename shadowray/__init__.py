@@ -7,13 +7,13 @@ from shadowray.common.utils import parse_yes_or_no
 from shadowray.common.utils import download_file
 from shadowray.common.utils import print_progress
 from shadowray.config.v2ray import V2RAY_BINARY, SUBSCRIBE_FILE, SERVER_FILE, V2RAY_FOLDER, RESOURCES_FOLDER, \
-    PROJECT_PATH
+    PROJECT_PATH, V2CTL_BINARY
 from shadowray.core.manager import Manager
 import requests
 import json
 import platform
 import zipfile
-import os
+import os, stat
 
 
 def create_basic_config_file():
@@ -181,6 +181,8 @@ def auto_config():
             print("\nSuccess!")
             os.remove(download_file_name)
 
+            os.chmod(path=V2RAY_BINARY, mode=stat.S_IXUSR)
+            os.chmod(path=V2CTL_BINARY, mode=stat.S_IXUSR)
             basic_config_v2ray(V2RAY_BINARY)
     else:
         print("Please setup by yourself.")
