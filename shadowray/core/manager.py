@@ -7,29 +7,34 @@ import json
 
 
 class Manager:
-    def __init__(self, subscribe_file_name=None, server_file_name=None, binary=V2RAY_BINARY):
-        self.subscribe = Parse(filename=subscribe_file_name)
-        self.server = Server(filename=server_file_name)
-        self.execute = Execute(binary=binary)
+    def __init__(self, subscribe_file_name=None, server_file_name=None, binary=None):
+        if subscribe_file_name is not None:
+            self.__subscribe = Parse(filename=subscribe_file_name)
+
+        if server_file_name is not None:
+            self.__server = Server(filename=server_file_name)
+
+        if binary is not None:
+            self.__execute = Execute(binary=binary)
 
     def add_subscribe(self, name, url):
-        self.subscribe.add(name, url)
+        self.__subscribe.add(name, url)
 
     def update_subscribe(self):
-        self.subscribe.update()
+        self.__subscribe.update()
 
-        self.server.clear(SERVER_KEY_FROM_SUBSCRIBE)
+        self.__server.clear(SERVER_KEY_FROM_SUBSCRIBE)
 
-        s = self.subscribe.get_servers()
+        s = self.__subscribe.get_servers()
 
         for i in s:
-            self.server.add(protocol=i['protocol'], config=i['config'], ps=i['ps'], key=SERVER_KEY_FROM_SUBSCRIBE)
+            self.__server.add(protocol=i['protocol'], config=i['config'], ps=i['ps'], key=SERVER_KEY_FROM_SUBSCRIBE)
 
     def delete_subscribe(self, name):
-        self.subscribe.delete(name)
+        self.__subscribe.delete(name)
 
     def show_servers(self):
-        servers = self.server.get_servers()
+        servers = self.__server.get_servers()
 
         count = 0
         for s in servers[SERVER_KEY_FROM_ORIGINAL]:
@@ -41,8 +46,14 @@ class Manager:
             print(str(count) + " ---- " + s['ps'] + " ---- " + s['protocol'])
 
     def proxy(self, index):
-        self.execute.exec(bytes(json.dumps(self.server.get_config(index)), encoding='utf8'))
+        self.__execute.exec(bytes(json.dumps(self.__server.get_config(index)), encoding='utf8'))
 
     def save(self):
-        self.server.save()
-        self.subscribe.save()
+        self.__server.save()
+        self.__subscribe.save()
+
+    def save_servers(self):
+        self.__server.save()
+
+    def save_subscribe(self):
+        self.__subscribe.save()
