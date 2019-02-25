@@ -1,8 +1,8 @@
-from subscribe.parse import Parse
-from core.server import Server
-from config.v2ray import V2RAY_BINARY
-from core.execute import Execute
-from config.v2ray import SERVER_KEY_FROM_ORIGINAL, SERVER_KEY_FROM_SUBSCRIBE
+from shadowray_pkg.subscribe.parse import Parse
+from shadowray_pkg.core.server import Server
+from shadowray_pkg.config.v2ray import V2RAY_BINARY
+from shadowray_pkg.core.execute import Execute
+from shadowray_pkg.config.v2ray import SERVER_KEY_FROM_ORIGINAL, SERVER_KEY_FROM_SUBSCRIBE
 import json
 
 
