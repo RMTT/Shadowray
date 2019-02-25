@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="shadowray",
-    version="0.1.3",
+    version="0.1.0",
     author="RMT",
     author_email="d.rong@outlook.com",
     description="A useful client of v2ray for linux",
