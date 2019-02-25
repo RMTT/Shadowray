@@ -14,7 +14,7 @@ def parse_yes_or_no(text):
         return None
 
 
-def print_progress(percent, width=100, extra=''):
+def print_progress(percent, width=60, extra=''):
     if percent > 100:
         percent = 100
 
