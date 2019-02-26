@@ -18,6 +18,7 @@ setuptools.setup(
     install_requires=["requests"],
     python_requires='>=3',
     license="MIT",
+    platform=['any'],
     project_urls={
         'Tracker': 'https://github.com/RMTT/Shadowray/issues',
     },

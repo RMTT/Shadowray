@@ -20,8 +20,8 @@ class Manager:
     def add_subscribe(self, name, url):
         self.__subscribe.add(name, url)
 
-    def update_subscribe(self):
-        self.__subscribe.update()
+    def update_subscribe(self, show_info=False):
+        self.__subscribe.update(show_info=show_info)
 
         self.__server.clear(SERVER_KEY_FROM_SUBSCRIBE)
 
@@ -45,8 +45,11 @@ class Manager:
             count += 1
             print(str(count) + " ---- " + s['ps'] + " ---- " + s['protocol'])
 
-    def proxy(self, index):
-        self.__execute.exec(bytes(json.dumps(self.__server.get_config(index)), encoding='utf8'))
+    def proxy(self, index=None, config=None):
+        if config is not None:
+            self.__execute.exec(bytes(json.dumps(config), encoding='utf8'))
+        elif index is not None:
+            self.__execute.exec(bytes(json.dumps(self.__server.get_config(index)), encoding='utf8'))
 
     def save(self):
         self.__server.save()
@@ -57,3 +60,6 @@ class Manager:
 
     def save_subscribe(self):
         self.__subscribe.save()
+
+    def get_server(self, index):
+        return self.__server.get_server(index)

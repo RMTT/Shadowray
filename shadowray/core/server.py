@@ -49,6 +49,16 @@ class Server:
     def servers_number(self):
         return self.subscribe_servers_number + self.original_servers_number
 
+    def get_server(self, index):
+        if index >= self.servers_number:
+            print("Index out of range.")
+            return None
+
+        if index < self.original_servers_number:
+            return self.__servers[SERVER_KEY_FROM_ORIGINAL][index]
+        else:
+            return self.__servers[SERVER_KEY_FROM_SUBSCRIBE][index - self.original_servers_number]
+
     def get_config(self, index):
         if index >= self.servers_number:
             print("Index out of range.")
@@ -59,5 +69,5 @@ class Server:
         else:
             return self.__servers[SERVER_KEY_FROM_SUBSCRIBE][index - self.original_servers_number]['config']
 
-    def clear(self,key):
+    def clear(self, key):
         self.__servers[key].clear()

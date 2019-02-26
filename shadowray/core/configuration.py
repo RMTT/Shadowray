@@ -2,8 +2,11 @@ import json
 
 
 class BaseConfig:
-    def __init__(self, obj):
+    def __init__(self, obj, **kwargs):
         self.__obj = obj
+
+        for key in kwargs:
+            self.__obj[key] = kwargs[key]
 
     def __str__(self):
         return json.dumps(self.__obj)
@@ -580,7 +583,7 @@ class Configuration(BaseConfig):
         STREAMSETTING = "StreamSetting"
         TRANSPORT = "Transport"
 
-        def __init__(self, type, network="tcp", security="none"):
+        def __init__(self, type, network="tcp", security="none", **kwargs):
             if type == Configuration.StreamSetting.STREAMSETTING:
                 self.__stream_setiing = {
                     "network": network,
@@ -608,7 +611,7 @@ class Configuration(BaseConfig):
                     "quicSettings": {}
                 }
 
-            super().__init__(self.__stream_setiing)
+            super().__init__(self.__stream_setiing, **kwargs)
 
         def set_tls(self, tls_obj):
             self.__stream_setiing['tlsSettings'] = tls_obj.json_obj
@@ -666,9 +669,61 @@ class Configuration(BaseConfig):
                 self.__tls['certificates'].append(cer)
 
         class TCP(BaseConfig):
-            def __init__(self):
-                self.__tcp = {}
-                super().__init__(self.__tcp)
+            def __init__(self, masquerading=False, type=None, **kwargs):
+                if masquerading is False:
+                    self.__tcp = {
+                        "type": "none"
+                    }
+                else:
+                    self.__tcp = {
+                        "type": type,
+                        "request": {},
+                        "response": {}
+                    }
+                super().__init__(self.__tcp, **kwargs)
+
+            def set_request(self, request_obj):
+                self.__tcp['request'] = request_obj.json_obj
+
+            def set_response(self, response_obj):
+                self.__tcp['response'] = response_obj.json_obj
+
+            class HttpRequest(BaseConfig):
+                def __init__(self, version="1.1", method="GET", path=None, headers=None, **kwargs):
+                    self.__request = {
+                        "version": version,
+                        "method": method,
+                        "path": [],
+                        "headers": {}
+                    }
+
+                    if path is not None:
+                        self.__request['path'].append(path)
+
+                    if headers is not None:
+                        self.__request['headers'] = headers
+
+                    super().__init__(self.__request, **kwargs)
+
+                def add_path(self, path):
+                    self.__request['path'].append(path)
+
+                def set_header(self, headers):
+                    self.__request['headers'] = headers
+
+            class HttpResponse(BaseConfig):
+                def __init__(self, version="1.1", status="200", reason="OK", headers=None, **kwargs):
+                    self.__response = {
+                        "version": version,
+                        "status": status,
+                        "reason": reason,
+                        "headers": {}
+                    }
+
+                    if headers is not None:
+                        self.__response['headers'] = headers
+
+                    super().__init__(self.__response, **kwargs)
 
         class KCP(BaseConfig):
             def __init__(self, mtu=1350, tti=50, uplink_capacity=5, download_capacity=20, congestion=False,

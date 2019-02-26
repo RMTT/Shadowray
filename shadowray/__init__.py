@@ -7,7 +7,7 @@ from shadowray.common.utils import parse_yes_or_no
 from shadowray.common.utils import download_file
 from shadowray.common.utils import print_progress
 from shadowray.config.v2ray import V2RAY_BINARY, SUBSCRIBE_FILE, SERVER_FILE, V2RAY_FOLDER, RESOURCES_FOLDER, \
-    PROJECT_PATH, V2CTL_BINARY
+    PROJECT_PATH, V2CTL_BINARY, SHADOWRAY_CONFIG_FOLDER
 from shadowray.core.manager import Manager
 import requests
 import json
@@ -17,6 +17,9 @@ import os, stat
 
 
 def create_basic_config_file():
+    if os.path.exists(SHADOWRAY_CONFIG_FOLDER) is False:
+        os.mkdir(SHADOWRAY_CONFIG_FOLDER)
+
     if os.path.exists(PROJECT_CONFIG_FILE) is False:
         os.mknod(PROJECT_CONFIG_FILE)
         f = open(PROJECT_CONFIG_FILE, 'w')
@@ -77,37 +80,44 @@ def write_to_file(filename, mode, content):
 def basic_config_v2ray(v2ray_binary=None):
     create_basic_config_file()
 
-    f = open(PROJECT_CONFIG_FILE, 'r')
-    j = json.load(f)
-    f.close()
+    if v2ray_binary is not None:
+        f = open(PROJECT_CONFIG_FILE, 'r')
+        j = json.load(f)
+        f.close()
 
-    j['v2ray_binary'] = v2ray_binary
+        j['v2ray_binary'] = v2ray_binary
 
-    write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
+        write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
 
 
 def basic_config_subscribe(subscribe_file=None):
     create_basic_config_file()
 
-    f = open(PROJECT_CONFIG_FILE, 'r')
-    j = json.load(f)
-    f.close()
+    if subscribe_file is not None:
+        f = open(PROJECT_CONFIG_FILE, 'r')
+        j = json.load(f)
+        f.close()
 
-    j['subscribe_file'] = subscribe_file
+        j['subscribe_file'] = subscribe_file
 
-    write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
+        write_to_file(SUBSCRIBE_FILE, "w", "{}")
+
+        write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
 
 
 def basic_config_servers(servers_file=None):
     create_basic_config_file()
 
-    f = open(PROJECT_CONFIG_FILE, 'r')
-    j = json.load(f)
-    f.close()
+    if servers_file is not None:
+        f = open(PROJECT_CONFIG_FILE, 'r')
+        j = json.load(f)
+        f.close()
 
-    j['servers_file'] = servers_file
+        j['servers_file'] = servers_file
 
-    write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
+        write_to_file(servers_file, "w", '{"servers_subscribe": [] ,"servers_original": []}')
+
+        write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
 
 
 def auto_config():
@@ -192,7 +202,7 @@ def update_subscribe():
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
     manager = Manager(server_file_name=j['servers_file'], subscribe_file_name=j['subscribe_file'])
 
-    manager.update_subscribe()
+    manager.update_subscribe(show_info=True)
     manager.save_servers()
 
 
@@ -208,16 +218,44 @@ def show_servers():
     manager.show_servers()
 
 
-def proxy(index):
-    index = int(index)
+def proxy(index=None, config_file=None):
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
+
     manager = Manager(server_file_name=j['servers_file'], binary=j['v2ray_binary'])
 
-    manager.proxy(index - 1)
+    if index is not None:
+        index = int(index)
+
+        server = manager.get_server(index - 1)
+        print("Choose: " + server['ps'])
+
+        ports = []
+        for c in server['config']['inbounds']:
+            if "port" in c:
+                ports.append(c['port'])
+        print("Port: " + str(ports))
+        manager.proxy(config=server['config'])
+    elif config_file is not None:
+        config = parse_json_from_file(config_file)
+
+        ports = []
+        for c in config['inbounds']:
+            if "port" in c:
+                ports.append(c['port'])
+        print("Port: " + str(ports))
+
+        manager.proxy(config=config)
 
 
 def main():
-    opts, args = getopt.getopt(sys.argv[1:], shortopts=COMMAND_SHORT, longopts=COMMAND_LONG)
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], shortopts=COMMAND_SHORT, longopts=COMMAND_LONG)
+    except Exception as e:
+        print(e.args[0])
+        return 0
+
+    if len(opts) == 0:
+        print("Use shadowray --help to get more information.")
 
     for op_name, op_value in opts:
         if op_name in ("-h", "--help"):
@@ -254,7 +292,7 @@ def main():
                 update_subscribe()
             break
 
-        if op_name in ("--list",):
+        if op_name in ("--list", "-l"):
             if have_config():
                 show_servers()
             break
@@ -262,4 +300,8 @@ def main():
         if op_name in ("--start", "-s"):
             if have_config():
                 proxy(op_value)
+            break
+
+        if op_name in ("--config-file", "-f"):
+            proxy(config_file=op_value)
             break

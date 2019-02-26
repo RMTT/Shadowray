@@ -47,6 +47,10 @@ class Parse:
                                       level=t[1]['v'])
                 vmess.add_server(vmess_server)
                 outbound.set_settings(vmess)
+
+                stream = Configuration.StreamSetting(type=Configuration.StreamSetting.STREAMSETTING,
+                                                     network=t[1]['net'])
+                outbound.set_stream(stream)
                 config.add_ontbound(outbound)
 
                 self.servers.append({
@@ -55,12 +59,16 @@ class Parse:
                     "ps": t[1]['ps']
                 })
 
-    def update(self, name=None):
+    def update(self, name=None, show_info=False):
         self.servers.clear()
         if name is None:
             for j in self.subscribes:
+                if show_info:
+                    print("update %s : %s" % (j, self.subscribes[j]))
                 self.get_url(self.subscribes[j])
         else:
+            if show_info:
+                print("update %s : %s" % (name, self.subscribes[name]))
             self.get_url(self.subscribes[name])
 
     def save(self, filename=None):
