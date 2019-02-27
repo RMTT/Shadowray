@@ -53,3 +53,9 @@ def download_file(url, filename, show_progress=False):
     f.close()
 
 
+def find_arg_in_opts(opts, key):
+    for k, v in opts:
+        if k == key:
+            return v
+
+    return None

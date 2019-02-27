@@ -18,7 +18,7 @@ class Parse:
 
             self.filename = filename
 
-    def get_url(self, url):
+    def get_url(self, url, **kwargs):
         r = requests.get(url).text
         text = decode(r)
 
@@ -33,7 +33,10 @@ class Parse:
 
             config = Configuration()
 
-            inbound = Configuration.Inbound(1082, "127.0.0.1", "socks")
+            port = 1082
+            if kwargs.get("port") is not None:
+                port = kwargs.get("port")
+            inbound = Configuration.Inbound(port, "127.0.0.1", "socks")
             socks = Configuration.ProtocolSetting.Inbound.Socks()
             inbound.set_settings(socks)
             config.add_inbound(inbound)
@@ -59,17 +62,17 @@ class Parse:
                     "ps": t[1]['ps']
                 })
 
-    def update(self, name=None, show_info=False):
+    def update(self, name=None, show_info=False, **kwargs):
         self.servers.clear()
         if name is None:
             for j in self.subscribes:
                 if show_info:
                     print("update %s : %s" % (j, self.subscribes[j]))
-                self.get_url(self.subscribes[j])
+                self.get_url(self.subscribes[j], **kwargs)
         else:
             if show_info:
                 print("update %s : %s" % (name, self.subscribes[name]))
-            self.get_url(self.subscribes[name])
+            self.get_url(self.subscribes[name], **kwargs)
 
     def save(self, filename=None):
         if filename is None:

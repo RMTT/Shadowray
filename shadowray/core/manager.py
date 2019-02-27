@@ -20,8 +20,8 @@ class Manager:
     def add_subscribe(self, name, url):
         self.__subscribe.add(name, url)
 
-    def update_subscribe(self, show_info=False):
-        self.__subscribe.update(show_info=show_info)
+    def update_subscribe(self, show_info=False, **kwargs):
+        self.__subscribe.update(show_info=show_info, **kwargs)
 
         self.__server.clear(SERVER_KEY_FROM_SUBSCRIBE)
 

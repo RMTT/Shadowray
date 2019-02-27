@@ -5,7 +5,7 @@ from shadowray.config.v2_repo import RELEASE_API
 from shadowray.config.version import *
 from shadowray.common.utils import parse_yes_or_no
 from shadowray.common.utils import download_file
-from shadowray.common.utils import print_progress
+from shadowray.common.utils import print_progress, find_arg_in_opts
 from shadowray.config.v2ray import V2RAY_BINARY, SUBSCRIBE_FILE, SERVER_FILE, V2RAY_FOLDER, RESOURCES_FOLDER, \
     PROJECT_PATH, V2CTL_BINARY, SHADOWRAY_CONFIG_FOLDER
 from shadowray.core.manager import Manager
@@ -198,11 +198,11 @@ def auto_config():
         print("Please setup by yourself.")
 
 
-def update_subscribe():
+def update_subscribe(**kwargs):
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
     manager = Manager(server_file_name=j['servers_file'], subscribe_file_name=j['subscribe_file'])
 
-    manager.update_subscribe(show_info=True)
+    manager.update_subscribe(show_info=True, **kwargs)
     manager.save_servers()
 
 
@@ -233,7 +233,7 @@ def proxy(index=None, config_file=None):
         for c in server['config']['inbounds']:
             if "port" in c:
                 ports.append(c['port'])
-        print("Port: " + str(ports))
+        print("Local port: " + str(ports))
         manager.proxy(config=server['config'])
     elif config_file is not None:
         config = parse_json_from_file(config_file)
@@ -242,9 +242,17 @@ def proxy(index=None, config_file=None):
         for c in config['inbounds']:
             if "port" in c:
                 ports.append(c['port'])
-        print("Port: " + str(ports))
+        print("Local port: " + str(ports))
 
         manager.proxy(config=config)
+
+
+def servers_export(index, path):
+    j = parse_json_from_file(PROJECT_CONFIG_FILE)
+
+    manager = Manager(server_file_name=j['servers_file'], binary=j['v2ray_binary'])
+    s = manager.get_server(index)
+    write_to_file(path, "w", json.dumps(s['config']))
 
 
 def main():
@@ -288,8 +296,11 @@ def main():
             break
 
         if op_name in ("--subscribe-update",):
+            port = 1082
+            if "--port" in sys.argv:
+                port = int(find_arg_in_opts(opts, "--port"))
             if have_config():
-                update_subscribe()
+                update_subscribe(port=port)
             break
 
         if op_name in ("--list", "-l"):
@@ -304,4 +315,10 @@ def main():
 
         if op_name in ("--config-file", "-f"):
             proxy(config_file=op_value)
+            break
+
+        if op_name in ("--servers-export",):
+            if have_config():
+                v = op_value.split(':')
+                servers_export(int(v[0]), v[1])
             break

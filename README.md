@@ -13,7 +13,13 @@ for more detail about command:
 ```bash
 shadowray --help
 ```
-
+### Default config
+#### Inbound:
++ protocol : socks5
++ port: 1082
++ auth: noauth
+#### Outbound:
++ Traffic camouflage : tcp
 ## Usage
 ### Basic config
 + subscribe.json : the file used to save subscribes,you can specify it by using `shadowray --config-subscribe <path>`,but the file must be created by yourself
@@ -29,7 +35,7 @@ you can use `shadowray --subscribe-add '<name>,<url>'` to add a subscribe.
 > Don't forget the `''`
 
 #### Update subscribes
-Using `shadowray --subscribe-update` to update all subscribes.
+Using `shadowray --subscribe-update` to update all subscribes.Meanwhile,you can use `--port <number>` to specify a port of inbound.
 
 ### Proxy
 #### List server
@@ -40,3 +46,5 @@ For starting a proxy,you can use `shadowray [--start|-s] <index>`
 ### Specify a config file of v2ray
 You can use your config file via `[--config-self|-f] <path>`.For example,
 `shadowray --config-self ~/config.json` or `shadowray -f ~/config.json`
+### Export config
+Using `shadowray --servers-export <index>:<path>` to export the specified config to file that specified by <path>
