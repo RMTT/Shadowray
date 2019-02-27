@@ -1,7 +1,7 @@
 # Shadowray
-A useful client of v2ray for linux
+An useful client of v2ray for linux
 
-## Simple use
+## Simple usage
 ```bash
 pip install shadowray
 shadowray --autoconfig
@@ -21,7 +21,7 @@ shadowray --help
 + v2ray : you should specify the folder of v2ray-core,using `shadowray --config-v2ray <path>
 
 ### For simplicity
-Using `shadowray --autoconfig`,then it will complete the basic config automatically,include the downloading the lasted v2ray-core
+Using `shadowray --autoconfig`,then it will complete the basic config automatically,include that downloading the lasted v2ray-core
 
 ### Subscribe
 #### Add a subscribe
@@ -36,4 +36,7 @@ Using `shadowray --subscribe-update` to update all subscribes.
 To see all available servers(proxies),using `shadowray [--list|-l]`.Then you will see some index,name of proxies,protocol of proxies,the index of proxies used to start a proxy
 
 #### Start a proxy
-For starting a proxy,you can use 'shadowray [--start|-s] <index>'
+For starting a proxy,you can use `shadowray [--start|-s] <index>`
+### Specify a config file of v2ray
+You can use your config file via `[--config-self|-f] <path>`.For example,
+`shadowray --config-self ~/config.json` or `shadowray -f ~/config.json`

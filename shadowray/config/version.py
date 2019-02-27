@@ -18,5 +18,5 @@ HELP_INFO = '''
     --subscribe-update                  update subscribe
     --list[-l]                          show all servers
     --start[-s] <index>                 start v2ray
-    --config-file[-f]                   run v2ray use the config file that provided by yourself
+    --config-file[-f] <path>            run v2ray use the config file that provided by yourself
     '''
