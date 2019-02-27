@@ -24,7 +24,7 @@ shadowray --help
 ### Basic config
 + subscribe.json : the file used to save subscribes,you can specify it by using `shadowray --config-subscribe <path>`,but the file must be created by yourself
 + servers.json : the file used to save servers,you can specify it by using `shadowray --config-servers <path>`,but the file must be created by yourself
-+ v2ray : you should specify the folder of v2ray-core,using `shadowray --config-v2ray <path>
++ v2ray : you should specify the folder of v2ray-core,using `shadowray --config-v2ray <path>`
 
 ### For simplicity
 Using `shadowray --autoconfig`,then it will complete the basic config automatically,include that downloading the lasted v2ray-core
