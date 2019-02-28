@@ -43,6 +43,9 @@ To see all available servers(proxies),using `shadowray [--list|-l]`.Then you wil
 
 #### Start a proxy
 For starting a proxy,you can use `shadowray [--start|-s] <index>`
+> For running v2ray as a daemon,by using `--daemon` or `-d`
+#### Stop daemon
+Using  `shadowray --stop`
 ### Specify a config file of v2ray
 You can use your config file via `[--config-self|-f] <path>`.For example,
 `shadowray --config-self ~/config.json` or `shadowray -f ~/config.json`

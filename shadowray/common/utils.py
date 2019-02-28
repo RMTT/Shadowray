@@ -59,3 +59,9 @@ def find_arg_in_opts(opts, key):
             return v
 
     return None
+
+
+def write_to_file(filename, mode, content):
+    f = open(filename, mode)
+    f.write(content)
+    f.close()

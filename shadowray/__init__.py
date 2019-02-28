@@ -5,15 +5,15 @@ from shadowray.config.v2_repo import RELEASE_API
 from shadowray.config.version import *
 from shadowray.common.utils import parse_yes_or_no
 from shadowray.common.utils import download_file
-from shadowray.common.utils import print_progress, find_arg_in_opts
+from shadowray.common.utils import print_progress, find_arg_in_opts, write_to_file
 from shadowray.config.v2ray import V2RAY_BINARY, SUBSCRIBE_FILE, SERVER_FILE, V2RAY_FOLDER, RESOURCES_FOLDER, \
-    PROJECT_PATH, V2CTL_BINARY, SHADOWRAY_CONFIG_FOLDER
+    PROJECT_PATH, V2CTL_BINARY, SHADOWRAY_CONFIG_FOLDER, V2RAY_PID_FILE
 from shadowray.core.manager import Manager
 import requests
 import json
 import platform
 import zipfile
-import os, stat
+import os, stat, signal
 
 
 def create_basic_config_file():
@@ -69,12 +69,6 @@ def add_subscribe(args):
 
     manager.add_subscribe(v[0], v[1])
     manager.save_subscribe()
-
-
-def write_to_file(filename, mode, content):
-    f = open(filename, mode)
-    f.write(content)
-    f.close()
 
 
 def basic_config_v2ray(v2ray_binary=None):
@@ -223,6 +217,10 @@ def proxy(index=None, config_file=None):
 
     manager = Manager(server_file_name=j['servers_file'], binary=j['v2ray_binary'])
 
+    daemon = False
+
+    if "--daemon" in sys.argv or "-d" in sys.argv:
+        daemon = True
     if index is not None:
         index = int(index)
 
@@ -234,7 +232,7 @@ def proxy(index=None, config_file=None):
             if "port" in c:
                 ports.append(c['port'])
         print("Local port: " + str(ports))
-        manager.proxy(config=server['config'])
+        manager.proxy(config=server['config'], daemon=daemon)
     elif config_file is not None:
         config = parse_json_from_file(config_file)
 
@@ -244,7 +242,7 @@ def proxy(index=None, config_file=None):
                 ports.append(c['port'])
         print("Local port: " + str(ports))
 
-        manager.proxy(config=config)
+        manager.proxy(config=config, daemon=daemon)
 
 
 def servers_export(index, path):
@@ -322,3 +320,17 @@ def main():
                 v = op_value.split(':')
                 servers_export(int(v[0]), v[1])
             break
+
+        if op_name in ("--stop",):
+            f = open(V2RAY_PID_FILE, "r")
+            s = f.read().strip()
+            f.close()
+
+            if s == "":
+                print("No running process.")
+            else:
+                try:
+                    os.kill(int(s), signal.SIGKILL)
+                except ProcessLookupError:
+                    print("Process[%s] not exist" % s)
+                write_to_file(V2RAY_PID_FILE, "w", "")

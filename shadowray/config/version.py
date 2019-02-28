@@ -4,8 +4,8 @@ EMAIL = "d.rong@outlook.com"
 
 COMMAND_LONG = ["version", "help", "subscribe-add=", "subscribe-update", "config-v2ray=", "config-subscribe=",
                 "config-servers=", "autoconfig", "subscribe-update", "list", "start=", "config-file=", "port=",
-                "servers-export="]
-COMMAND_SHORT = "vhs:lf:"
+                "servers-export=", "daemon", "stop"]
+COMMAND_SHORT = "vhs:lf:d"
 
 HELP_INFO = '''
     --help[-h]                                            print help message
@@ -18,7 +18,8 @@ HELP_INFO = '''
     --autoconfig                                          setup basic setting automatically
     --subscribe-update [--port <number>]                  update subscribe
     --list[-l]                                            show all servers
-    --start[-s] <index>                                   start v2ray
+    --start[-s] <index> [-d|--daemon]                     start v2ray,the '-d or --daemon argument used to run v2ray as a daemon'
     --config-file[-f] <path>                              run v2ray use the config file that provided by yourself
     --servers-export <index>:<path>                       export the config of specified index
+    --stop                                                stop v2ray
     '''

@@ -19,3 +19,7 @@ PROJECT_CONFIG_FILE = os.path.join(SHADOWRAY_CONFIG_FOLDER, "config.json")
 
 SERVER_KEY_FROM_ORIGINAL = "servers_original"
 SERVER_KEY_FROM_SUBSCRIBE = "servers_subscribe"
+
+V2RAY_PID_FILE = os.path.join(SHADOWRAY_CONFIG_FOLDER, "pid")
+
+CONFIG_STREAM_FILE = os.path.join(SHADOWRAY_CONFIG_FOLDER, "stdin")

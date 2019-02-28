@@ -45,11 +45,11 @@ class Manager:
             count += 1
             print(str(count) + " ---- " + s['ps'] + " ---- " + s['protocol'])
 
-    def proxy(self, index=None, config=None):
+    def proxy(self, index=None, config=None, daemon=False):
         if config is not None:
-            self.__execute.exec(bytes(json.dumps(config), encoding='utf8'))
+            self.__execute.exec(json.dumps(config), daemon=daemon)
         elif index is not None:
-            self.__execute.exec(bytes(json.dumps(self.__server.get_config(index)), encoding='utf8'))
+            self.__execute.exec(json.dumps(self.__server.get_config(index)), daemon=daemon)
 
     def save(self):
         self.__server.save()
