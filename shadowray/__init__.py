@@ -206,11 +206,6 @@ def show_servers():
 
     manager.show_servers()
 
-    j = parse_json_from_file(PROJECT_CONFIG_FILE)
-    manager = Manager(server_file_name=j['servers_file'])
-
-    manager.show_servers()
-
 
 def proxy(index=None, config_file=None):
     j = parse_json_from_file(PROJECT_CONFIG_FILE)
