@@ -329,3 +329,5 @@ def main():
                 except ProcessLookupError:
                     print("Process[%s] not exist" % s)
                 write_to_file(V2RAY_PID_FILE, "w", "")
+
+        # TODO: configure single proxy by users
