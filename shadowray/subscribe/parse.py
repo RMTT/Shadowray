@@ -46,8 +46,10 @@ class Parse:
                 vmess = Configuration.ProtocolSetting.Outbound.VMess()
                 vmess_server = Configuration.ProtocolSetting.Outbound.VMess.Server(addr=t[1]['add'],
                                                                                    port=int(t[1]['port']))
-                vmess_server.add_user(id=t[1]['id'], aid=t[1]['aid'], security=t[1]['type'],
-                                      level=t[1]['v'])
+                vmess_server.add_user(id=t[1]['id'],
+                                      aid=int(t[1].get('aid', 0)),
+                                      security=t[1].get('type', 'auto')],
+                                      level=t[1].get('v', 0))
                 vmess.add_server(vmess_server)
                 outbound.set_settings(vmess)
 
