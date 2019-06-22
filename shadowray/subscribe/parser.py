@@ -5,7 +5,7 @@ from shadowray.config.v2ray import SUBSCRIBE_FILE
 from shadowray.core.configuration import Configuration
 
 
-class Parse:
+class Parser:
     def __init__(self, filename=None):
         self.servers = []
         self.filename = None
@@ -48,7 +48,7 @@ class Parse:
                                                                                    port=int(t[1]['port']))
                 vmess_server.add_user(id=t[1]['id'],
                                       aid=int(t[1].get('aid', 0)),
-                                      security=t[1].get('type', 'auto')],
+                                      security=t[1].get('type', 'auto'),
                                       level=t[1].get('v', 0))
                 vmess.add_server(vmess_server)
                 outbound.set_settings(vmess)

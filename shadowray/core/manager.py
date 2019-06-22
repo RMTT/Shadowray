@@ -1,4 +1,4 @@
-from shadowray.subscribe.parse import Parse
+from shadowray.subscribe.parser import Parser
 from shadowray.core.server import Server
 from shadowray.config.v2ray import V2RAY_BINARY
 from shadowray.core.execute import Execute
@@ -9,7 +9,7 @@ import json
 class Manager:
     def __init__(self, subscribe_file_name=None, server_file_name=None, binary=None):
         if subscribe_file_name is not None:
-            self.__subscribe = Parse(filename=subscribe_file_name)
+            self.__subscribe = Parser(filename=subscribe_file_name)
 
         if server_file_name is not None:
             self.__server = Server(filename=server_file_name)
