@@ -4,7 +4,7 @@ EMAIL = "d.rong@outlook.com"
 
 COMMAND_LONG = ["version", "help", "subscribe-add=", "subscribe-update", "config-v2ray=", "config-subscribe=",
                 "config-servers=", "autoconfig", "subscribe-update", "list", "start=", "config-file=", "port=",
-                "servers-export=", "daemon", "stop"]
+                "servers-export=", "daemon", "stop", "v2ray-update"]
 COMMAND_SHORT = "vhs:lf:d"
 
 HELP_INFO = '''

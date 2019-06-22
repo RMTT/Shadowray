@@ -336,6 +336,7 @@ def main():
 
         if op_name in ("--v2ray-update"):
             download_latest_v2ray()
+
 # TODO: use bullet to interact with users in shell
 
 # TODO: configure single proxy by users
