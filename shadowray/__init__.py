@@ -114,6 +114,50 @@ def basic_config_servers(servers_file=None):
         write_to_file(PROJECT_CONFIG_FILE, 'w', json.dumps(j))
 
 
+def download_latest_v2ray():
+    r = json.loads(requests.get(RELEASE_API).text)
+    print("Latest publish date of v2ray-core: " + r['published_at'])
+    print("Latest version of v2ray-core: " + r['tag_name'])
+
+    os_str = str(platform.system())
+    arch = str(platform.architecture()[0])
+    print("Platform: " + os_str + " " + arch)
+
+    assets = r['assets']
+
+    download_url = None
+    for asset in assets:
+        name = str(asset['name'])
+
+        if name.endswith("zip") and name.find(os_str.lower()) != -1 and name.find(arch[0:2]) != -1:
+            download_url = str(asset['browser_download_url'])
+            break
+
+    if download_url is None:
+        print("Download failed,you can download by yourself.")
+    else:
+        print('Download from %s' % download_url)
+
+        download_file_name = os.path.join(V2RAY_FOLDER, download_url.split('/')[-1])
+        download_file(download_url, download_file_name, show_progress=True)
+
+        print("\nU=uncompression:")
+        f = zipfile.ZipFile(download_file_name, 'r')
+        total = len(f.filelist)
+        count = 0
+        for file in f.filelist:
+            f.extract(file, V2RAY_FOLDER)
+            count += 1
+            print_progress(100 * count / total, extra="%d/%d" % (count, total))
+
+        print("\nSuccess!")
+        os.remove(download_file_name)
+
+        os.chmod(path=V2RAY_BINARY, mode=stat.S_IXUSR)
+        os.chmod(path=V2CTL_BINARY, mode=stat.S_IXUSR)
+        basic_config_v2ray(V2RAY_BINARY)
+
+
 def auto_config():
     create_basic_config_file()
 
@@ -147,47 +191,7 @@ def auto_config():
         os.mkdir("v2ray")
 
     if s:
-        r = json.loads(requests.get(RELEASE_API).text)
-        print("Latest publish date of v2ray-core: " + r['published_at'])
-        print("Latest version of v2ray-core: " + r['tag_name'])
-
-        os_str = str(platform.system())
-        arch = str(platform.architecture()[0])
-        print("Platform: " + os_str + " " + arch)
-
-        assets = r['assets']
-
-        download_url = None
-        for asset in assets:
-            name = str(asset['name'])
-
-            if name.endswith("zip") and name.find(os_str.lower()) != -1 and name.find(arch[0:2]) != -1:
-                download_url = str(asset['browser_download_url'])
-                break
-
-        if download_url is None:
-            print("Download failed,you can download by yourself.")
-        else:
-            print('Download from %s' % download_url)
-
-            download_file_name = os.path.join(V2RAY_FOLDER, download_url.split('/')[-1])
-            download_file(download_url, download_file_name, show_progress=True)
-
-            print("\nUncompression:")
-            f = zipfile.ZipFile(download_file_name, 'r')
-            total = len(f.filelist)
-            count = 0
-            for file in f.filelist:
-                f.extract(file, V2RAY_FOLDER)
-                count += 1
-                print_progress(100 * count / total, extra="%d/%d" % (count, total))
-
-            print("\nSuccess!")
-            os.remove(download_file_name)
-
-            os.chmod(path=V2RAY_BINARY, mode=stat.S_IXUSR)
-            os.chmod(path=V2CTL_BINARY, mode=stat.S_IXUSR)
-            basic_config_v2ray(V2RAY_BINARY)
+        download_latest_v2ray()
     else:
         print("Please setup by yourself.")
 
@@ -252,8 +256,8 @@ def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts=COMMAND_SHORT, longopts=COMMAND_LONG)
     except Exception as e:
-        print(e.args[0])
-        return 0
+        print("some error occurs when parsing your command args.")
+        return 1
 
     if len(opts) == 0:
         print("Use shadowray --help to get more information.")
@@ -330,4 +334,8 @@ def main():
                     print("Process[%s] not exist" % s)
                 write_to_file(V2RAY_PID_FILE, "w", "")
 
-        # TODO: configure single proxy by users
+        if op_name in ("--v2ray-update"):
+            download_latest_v2ray()
+# TODO: use bullet to interact with users in shell
+
+# TODO: configure single proxy by users

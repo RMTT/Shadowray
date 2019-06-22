@@ -22,4 +22,5 @@ HELP_INFO = '''
     --config-file[-f] <path>                              run v2ray use the config file that provided by yourself
     --servers-export <index>:<path>                       export the config of specified index
     --stop                                                stop v2ray
+    --v2ray-update                                        update v2ray core to latest
     '''
