@@ -4,7 +4,7 @@ PROJECT_PATH = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 USER_HOME = os.path.expanduser("~")
 
-SHADOWRAY_CONFIG_FOLDER = os.path.join(USER_HOME, ".shadowray")
+SHADOWRAY_CONFIG_FOLDER = os.path.join(PROJECT_PATH, ".shadowray")
 
 V2RAY_FOLDER = os.path.join(SHADOWRAY_CONFIG_FOLDER, "v2ray")
 V2RAY_BINARY = os.path.join(V2RAY_FOLDER, "v2ray")
