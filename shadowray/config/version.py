@@ -1,4 +1,4 @@
-VERSION_ID = "0.1.5"
+VERSION_ID = "0.1.6"
 AUTHOR = "RMT"
 EMAIL = "d.rong@outlook.com"
 
