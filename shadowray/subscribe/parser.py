@@ -61,7 +61,8 @@ class Parser:
                 self.servers.append({
                     "protocol": t[0],
                     "config": config.json_obj,
-                    "ps": t[1]['ps']
+                    "ps": t[1]['ps'],
+                    "host": t[1]['add']
                 })
 
     def update(self, name=None, show_info=False, **kwargs):

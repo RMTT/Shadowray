@@ -22,11 +22,12 @@ class Server:
         f.write(json.dumps(self.__servers))
         f.close()
 
-    def add(self, protocol, config, ps, key):
+    def add(self, protocol, config, ps, key, host):
         self.__servers[key].append({
             "protocol": protocol,
             "config": config,
-            "ps": ps
+            "ps": ps,
+            "host": host
         })
 
     def get(self, index):

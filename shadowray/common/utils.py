@@ -1,6 +1,8 @@
+import re
+import subprocess
+
 import requests
 import time
-import json
 
 
 def parse_yes_or_no(text):
@@ -65,3 +67,17 @@ def write_to_file(filename, mode, content):
     f = open(filename, mode)
     f.write(content)
     f.close()
+
+
+def ping(host, times=3, timeout=1):
+    command = ['ping', "-c", str(times), host, "-W", str(timeout)]
+
+    r = subprocess.run(command, stdout=subprocess.PIPE)
+
+    reg = r'min/avg/max/mdev = ([0-9]+.[0-9]+)/([0-9]+.[0-9]+)'
+    s = re.search(reg, str(r.stdout))
+
+    if s is not None:
+        return s.group(1)
+    else:
+        return -1

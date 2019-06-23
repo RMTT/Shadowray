@@ -5,7 +5,7 @@ from shadowray.config.v2_repo import RELEASE_API
 from shadowray.config.version import *
 from shadowray.common.utils import parse_yes_or_no
 from shadowray.common.utils import download_file
-from shadowray.common.utils import print_progress, find_arg_in_opts, write_to_file
+from shadowray.common.utils import print_progress, find_arg_in_opts, write_to_file, ping
 from shadowray.config.v2ray import V2RAY_BINARY, SUBSCRIBE_FILE, SERVER_FILE, V2RAY_FOLDER, RESOURCES_FOLDER, \
     PROJECT_PATH, V2CTL_BINARY, SHADOWRAY_CONFIG_FOLDER, V2RAY_PID_FILE
 from shadowray.core.manager import Manager
@@ -14,6 +14,7 @@ import json
 import platform
 import zipfile
 import os, stat, signal
+from bullet import ScrollBar
 
 
 def create_basic_config_file():
@@ -252,6 +253,35 @@ def servers_export(index, path):
     write_to_file(path, "w", json.dumps(s['config']))
 
 
+def prepare_ping():
+    j = parse_json_from_file(PROJECT_CONFIG_FILE)
+
+    manager = Manager(server_file_name=j['servers_file'], binary=j['v2ray_binary'])
+
+    choices = ["ping all"]
+
+    l = manager.server_number
+    for i in range(l):
+        s = manager.get_server(i)
+        choices.append(str(i + 1) + "  " + s['ps'] + "  " + s['host'])
+
+    prompt = ScrollBar(height=10, choices=choices)
+    result = prompt.launch()
+    index = choices.index(result)
+    print("index            ps          time")
+    if index == 0:
+        for i in range(l):
+            s = manager.get_server(i)
+            r = ping(host=s['host'])
+            result = str(r) + "ms" if r != -1 else "timeout"
+            print(str(i + 1) + "  " + s['ps'] + "  " + result)
+    else:
+        s = manager.get_server(index - 1)
+        r = ping(host=s['host'])
+        result = str(r) + "ms" if r != -1 else "timeout"
+        print(str(index) + "  " + s['ps'] + "  " + result)
+
+
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopts=COMMAND_SHORT, longopts=COMMAND_LONG)
@@ -326,7 +356,7 @@ def main():
             f.close()
 
             if s == "":
-                print("No running process.")
+                print("no running process.")
             else:
                 try:
                     os.kill(int(s), signal.SIGKILL)
@@ -334,9 +364,12 @@ def main():
                     print("Process[%s] not exist" % s)
                 write_to_file(V2RAY_PID_FILE, "w", "")
 
-        if op_name in ("--v2ray-update"):
-            download_latest_v2ray()
+        if op_name in ("--v2ray-update",):
+            if have_config():
+                download_latest_v2ray()
 
-# TODO: use bullet to interact with users in shell
+        if op_name in ("--ping",):
+            if have_config():
+                prepare_ping()
 
 # TODO: configure single proxy by users

@@ -1,6 +1,5 @@
 from shadowray.subscribe.parser import Parser
 from shadowray.core.server import Server
-from shadowray.config.v2ray import V2RAY_BINARY
 from shadowray.core.execute import Execute
 from shadowray.config.v2ray import SERVER_KEY_FROM_ORIGINAL, SERVER_KEY_FROM_SUBSCRIBE
 import json
@@ -28,7 +27,8 @@ class Manager:
         s = self.__subscribe.get_servers()
 
         for i in s:
-            self.__server.add(protocol=i['protocol'], config=i['config'], ps=i['ps'], key=SERVER_KEY_FROM_SUBSCRIBE)
+            self.__server.add(protocol=i['protocol'], config=i['config'], ps=i['ps'], key=SERVER_KEY_FROM_SUBSCRIBE,
+                              host=i['host'])
 
     def delete_subscribe(self, name):
         self.__subscribe.delete(name)
@@ -63,3 +63,7 @@ class Manager:
 
     def get_server(self, index):
         return self.__server.get_server(index)
+
+    @property
+    def server_number(self):
+        return self.__server.original_servers_number + self.__server.subscribe_servers_number

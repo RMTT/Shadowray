@@ -4,7 +4,7 @@ EMAIL = "d.rong@outlook.com"
 
 COMMAND_LONG = ["version", "help", "subscribe-add=", "subscribe-update", "config-v2ray=", "config-subscribe=",
                 "config-servers=", "autoconfig", "subscribe-update", "list", "start=", "config-file=", "port=",
-                "servers-export=", "daemon", "stop", "v2ray-update"]
+                "servers-export=", "daemon", "stop", "v2ray-update", "ping"]
 COMMAND_SHORT = "vhs:lf:d"
 
 HELP_INFO = '''
@@ -23,4 +23,5 @@ HELP_INFO = '''
     --servers-export <index>:<path>                       export the config of specified index
     --stop                                                stop v2ray
     --v2ray-update                                        update v2ray core to latest
+    --ping                                                ping server
     '''
