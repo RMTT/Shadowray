@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/RMTT/Shadowray",
     packages=setuptools.find_packages(),
     keywords=("pip", "v2ray", "shadowsocks", "shadowray"),
-    install_requires=["requests"],
+    install_requires=["requests", "bullet"],
     python_requires='>=3',
     license="MIT",
     platform=['any'],
