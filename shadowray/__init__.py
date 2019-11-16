@@ -22,7 +22,6 @@ def create_basic_config_file():
         os.mkdir(SHADOWRAY_CONFIG_FOLDER)
 
     if os.path.exists(PROJECT_CONFIG_FILE) is False:
-        os.mknod(PROJECT_CONFIG_FILE)
         f = open(PROJECT_CONFIG_FILE, 'w')
         f.write('{ \
                     "v2ray_binary": null, \
@@ -122,6 +121,10 @@ def download_latest_v2ray():
 
     os_str = str(platform.system())
     arch = str(platform.architecture()[0])
+
+    if os_str.endswith("Darwin"):
+        os_str = "macos"
+
     print("Platform: " + os_str + " " + arch)
 
     assets = r['assets']
@@ -130,9 +133,10 @@ def download_latest_v2ray():
     for asset in assets:
         name = str(asset['name'])
 
-        if name.endswith("zip") and name.find(os_str.lower()) != -1 and name.find(arch[0:2]) != -1:
-            download_url = str(asset['browser_download_url'])
-            break
+        if name.endswith("zip") and name.find(os_str.lower()) != -1:
+            if os_str.endswith("macos") or name.find(arch[0:2]) != -1:
+                download_url = str(asset['browser_download_url'])
+                break
 
     if download_url is None:
         print("Download failed,you can download by yourself.")
@@ -167,12 +171,14 @@ def auto_config():
         print("Create resources folder.(%s)" % RESOURCES_FOLDER)
 
     if os.path.exists(SERVER_FILE) is False:
-        os.mknod(SERVER_FILE)
+        # os.mknod(SERVER_FILE)
+        open(SERVER_FILE, "w").close()  # for mac os x
         print("Create servers file.(%s)" % SERVER_FILE)
         write_to_file(SERVER_FILE, "w", '{"servers_subscribe": [] ,"servers_original": []}')
 
     if os.path.exists(SUBSCRIBE_FILE) is False:
-        os.mknod(SUBSCRIBE_FILE)
+        # os.mknod(SUBSCRIBE_FILE)
+        open(SUBSCRIBE_FILE, "w").close()
         print("Create subscribe file.(%s)" % SUBSCRIBE_FILE)
         write_to_file(SUBSCRIBE_FILE, "w", '{}')
 
