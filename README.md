@@ -1,3 +1,5 @@
+# Notice
+This project has stopped. You can use [Clash](https://github.com/Dreamacro/clash) and [subconverter](https://github.com/tindy2013/subconverter) to implement the same effect, and they can do better.
 # Shadowray
 An useful client of v2ray for linux
 
